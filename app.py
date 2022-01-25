@@ -65,14 +65,20 @@ def add_food():
         return jsonify(status=403, message="Unauthorized request!", data=None), 403
 
     if access in authorizations:
-        session = Session(m.engine)
-        print(request.data)
-        print(request.json)
-        new_food = m.Food(title=request.json.get("title", "Без названия"), description=request.json.get("description", ""), amount=request.json.get("amount", 0), price=request.json.get("price", 0))
-        session.add(new_food)
-        session.commit()
-        response = {"title": request.json.get("title", "Без названия"), "description": request.json.get("description", ""), "amount": request.json.get("amount", 0), "price": request.json.get("price", 0)}
-        return jsonify(status=201, data=response), 201
+        if request.json == None or request.json is None:
+            session = Session(m.engine)
+            new_food = m.Food(title=request.json.get("title", "Без названия"), description=request.json.get("description", ""), amount=request.json.get("amount", 0), price=request.json.get("price", 0))
+            session.add(new_food)
+            session.commit()
+            response = {"title": request.form.get("title", "Без названия"), "description": request.form.get("description", ""), "amount": request.form.get("amount", 0), "price": request.form.get("price", 0)}
+            return jsonify(status=201, data=response), 201
+        else:
+            session = Session(m.engine)
+            new_food = m.Food(title=request.json.get("title", "Без названия"), description=request.json.get("description", ""), amount=request.json.get("amount", 0), price=request.json.get("price", 0))
+            session.add(new_food)
+            session.commit()
+            response = {"title": request.json.get("title", "Без названия"), "description": request.json.get("description", ""), "amount": request.json.get("amount", 0), "price": request.json.get("price", 0)}
+            return jsonify(status=201, data=response), 201
     else:
         return jsonify(status=403, message="Wrong authorization key!", data=None), 403
 
