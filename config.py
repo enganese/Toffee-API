@@ -1,0 +1,1 @@
+DB_URL = f"postgresql+psycopg2://postgres:ulan290106@127.0.0.1:5432/postgres"
