@@ -65,6 +65,10 @@ def add_food():
         return jsonify(status=403, message="Unauthorized request!", data=None), 403
 
     if access in authorizations:
+        print("form", request.form)
+        print("json", request.json)
+        print("data", request.data)
+        print("values", request.values)
         if request.json == None or request.json is None:
             session = Session(m.engine)
             new_food = m.Food(title=request.values.get("title"), description=request.values.get("description"), amount=request.values.get("amount"), price=request.values.get("price"))
