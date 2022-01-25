@@ -66,6 +66,8 @@ def add_food():
 
     if access in authorizations:
         session = Session(m.engine)
+        print(request.data)
+        print(request.json)
         new_food = m.Food(title=request.json.get("title", "Без названия"), description=request.json.get("description", ""), amount=request.json.get("amount", 0), price=request.json.get("price", 0))
         session.add(new_food)
         session.commit()
