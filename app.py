@@ -65,25 +65,13 @@ def add_food():
         return jsonify(status=403, message="Unauthorized request!", data=None), 403
 
     if access in authorizations:
-        print("form", request.form)
-        print("json", request.json)
-        print("data", request.data)
-        print("values", request.values)
-        print("form.get('title')", request.form.get('title'))
-        print("values.get('title')", request.values.get('title'))
-        print("form.getlist('title')", request.form.getlist('title'))
-        print("values.getlist('title')", request.values.getlist('title'))
-        print("request.form.to_dict()", request.form.to_dict())
         print("request.values.to_dict()", request.values.to_dict())
-        print("request.form.to_dict(flat=False)", request.form.to_dict(flat=False))
-        print("request.get_json()", request.get_json())
-        print("request.get_json()['title']", request.get_json()['title'])
         if request.json == None or request.json is None:
             session = Session(m.engine)
-            new_food = m.Food(title=request.values.get("title"), description=request.values.get("description"), amount=request.values.get("amount"), price=request.values.get("price"))
+            new_food = m.Food(title=request.values.to_dict().get("title"), description=request.values.to_dict().get("description"), amount=request.values.to_dict().get("amount"), price=request.values.to_dict().get("price"))
             session.add(new_food)
             session.commit()
-            response = {"title": request.values.get("title"), "description": request.values.get("description"), "amount": request.values.get("amount"), "price": request.values.get("price")}
+            response = {"title": request.values.to_dict().get("title"), "description": request.values.to_dict().get("description"), "amount": request.values.to_dict().get("amount"), "price": request.values.to_dict().get("price")}
             return jsonify(status=201, data=response), 201
         else:
             session = Session(m.engine)
