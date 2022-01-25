@@ -69,6 +69,8 @@ def add_food():
         print("json", request.json)
         print("data", request.data)
         print("values", request.values)
+        print("form.get('title')", request.form.get('title'))
+        print("values.get('title')", request.values.get('title'))
         if request.json == None or request.json is None:
             session = Session(m.engine)
             new_food = m.Food(title=request.values.get("title"), description=request.values.get("description"), amount=request.values.get("amount"), price=request.values.get("price"))
