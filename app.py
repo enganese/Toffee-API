@@ -34,7 +34,8 @@ def get_foods():
     if access in authorizations:
         session = Session(m.engine)
         foods = session.query(m.Food).all()
-        response = jsonify(status=200, data=foods), 200
+        print(foods)
+        response = jsonify(status=200, data=[foods]), 200
         return response
     else:
         return jsonify(status=403, message="Wrong authorization key!", data=None), 403
