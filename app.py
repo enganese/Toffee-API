@@ -67,10 +67,10 @@ def add_food():
     if access in authorizations:
         if request.json == None or request.json is None:
             session = Session(m.engine)
-            new_food = m.Food(title=request.form.get("title"), description=request.form.get("description"), amount=request.form.get("amount"), price=request.form.get("price"))
+            new_food = m.Food(title=request.values.get("title"), description=request.values.get("description"), amount=request.values.get("amount"), price=request.values.get("price"))
             session.add(new_food)
             session.commit()
-            response = {"title": request.form.get("title"), "description": request.form.get("description"), "amount": request.form.get("amount"), "price": request.form.get("price")}
+            response = {"title": request.values.get("title"), "description": request.values.get("description"), "amount": request.values.get("amount"), "price": request.values.get("price")}
             return jsonify(status=201, data=response), 201
         else:
             session = Session(m.engine)
