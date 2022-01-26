@@ -99,7 +99,7 @@ def get_food(food_id):
         return jsonify(status=403, message="Wrong authorization key!", data=None), 403
 
 
-@app.route('/api/beta/foods/<int:food_id>', methods=['PUT'])
+@app.route('/api/beta/foods/<int:food_id>', methods=['PUT', "POST", "PATCH"])
 def update_food(food_id):
     access = request.headers.get("Authorization")
     if access == None or access is None:
