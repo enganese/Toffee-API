@@ -99,36 +99,39 @@ def get_food(food_id):
         return jsonify(status=403, message="Wrong authorization key!", data=None), 403
 
 
-@app.route('/api/beta/foods/<int:food_id>', methods=['PUT', "POST", "PATCH"])
+@app.route('/api/beta/foods/<int:food_id>', methods=['PUT', "POST"])
 def update_food(food_id):
     access = request.headers.get("Authorization")
     if access == None or access is None:
         return jsonify(status=403, message="Unauthorized request!"), 403
     if access in authorizations:
-        print("form", request.form)
-        print("json", request.json)
-        print("data", request.data)
-        print("values", request.values)
-        print("form.get('title')", request.form.get('title'))
-        print("values.get('title')", request.values.get('title'))
-        print("form.getlist('title')", request.form.getlist('title'))
-        print("values.getlist('title')", request.values.getlist('title'))
-        print("request.form.to_dict()", request.form.to_dict())
-        print("request.values.to_dict()", request.values.to_dict())
-        print("request.form.to_dict(flat=False)", request.form.to_dict(flat=False))
         print("request.get_json()", request.get_json())
-        print("request.get_json()['title']", request.get_json()['title'])
-        session = Session(m.engine)
-        food = session.query(m.Food).filter(m.Food.id == food_id).first()
-        if not food:
-            return jsonify(status=404, message="no such food_id", data=None), 404
-        food.title = request.values.to_dict().get('title', food.title)
-        food.description = request.values.to_dict().get('description', food.description)
-        food.amount = request.values.to_dict().get('amount', food.amount)
-        food.price = request.values.to_dict().get('price', food.price)
-        session.add(food)
-        session.commit()
-        return jsonify(status=200, data={"id": food.id, "title": food.title, "description": food.description, "amount": food.amount, "price": food.price}), 200
+        if request.get_json() == None or request.get_json() is None:
+            session = Session(m.engine)
+            food = session.query(m.Food).filter(m.Food.id == food_id).first()
+            if not food:
+                return jsonify(status=404, message="no such food_id", data=None), 404
+            food.title = request.values.to_dict().get('title', food.title)
+            food.description = request.values.to_dict().get('description', food.description)
+            food.amount = request.values.to_dict().get('amount', food.amount)
+            food.price = request.values.to_dict().get('price', food.price)
+            session.add(food)
+            session.commit()
+            return jsonify(status=200, data={"id": food.id, "title": food.title, "description": food.description, "amount": food.amount, "price": food.price}), 200
+        else:
+            session = Session(m.engine)
+            food = session.query(m.Food).filter(m.Food.id == food_id).first()
+            if not food:
+                return jsonify(status=404, message="no such food_id", data=None), 404
+            food.title = request.get_json().get('title', food.title)
+            food.description = request.get_json().get('description', food.description)
+            food.amount = request.get_json().get('amount', food.amount)
+            food.price = request.get_json().get('price', food.price)
+            session.add(food)
+            session.commit()
+            food_again = session.query(m.Food).filter(m.Food.id == food_id).first()
+            return jsonify(status=200, data={"id": food_again.id, "title": food_again.title, "description": food_again.description, "amount": food_again.amount, "price": food_again.price}), 200
+
     else:
         return jsonify(status=403, message="Wrong authorization key!", data=None), 403
 
