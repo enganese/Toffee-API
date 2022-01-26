@@ -105,6 +105,7 @@ def update_food(food_id):
     if access == None or access is None:
         return jsonify(status=403, message="Unauthorized request!"), 403
     if access in authorizations:
+        print("request.values.to_dict()", request.values.to_dict())
         session = Session(m.engine)
         food = session.query(m.Food).filter(m.Food.id == food_id).first()
         if not food:
