@@ -16,6 +16,15 @@ def resource_not_found(e):
     return jsonify(status=404, message="Requested URL doesn't exist", data=None), 404
 
 
+@app.errorhandler(405)
+def server_side_error(e):
+    if request.headers.get('Authorization') == None:
+        return jsonify(status=403, message="Unauthorized request!", data=None), 403
+    if not request.headers.get('Authorization') in authorizations:
+        return jsonify(status=403, message="Wrong authorization key!", data=None), 403
+    return jsonify(status=405, message="Unallowed/wrong request method!", data=None), 405
+
+
 @app.errorhandler(500)
 def server_side_error(e):
     if request.headers.get('Authorization') == None:
