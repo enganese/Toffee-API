@@ -66,7 +66,7 @@ def add_food():
 
     if access in authorizations:
         print("request.values.to_dict()", request.values.to_dict())
-        if request.json == None or request.json is None:
+        if request.get_json() == None or request.get_json() is None:
             session = Session(m.engine)
             new_food = m.Food(title=request.values.to_dict().get("title"), description=request.values.to_dict().get("description"), amount=request.values.to_dict().get("amount"), price=request.values.to_dict().get("price"))
             session.add(new_food)
@@ -75,10 +75,10 @@ def add_food():
             return jsonify(status=201, data=response), 201
         else:
             session = Session(m.engine)
-            new_food = m.Food(title=request.json.get("title", "Без названия"), description=request.json.get("description", ""), amount=request.json.get("amount", 0), price=request.json.get("price", 0))
+            new_food = m.Food(title=request.get_json().get("title", "Без названия"), description=request.get_json().get("description", ""), amount=request.get_json().get("amount", 0), price=request.get_json().get("price", 0))
             session.add(new_food)
             session.commit()
-            response = {"id": new_food.id, "title": request.json.get("title", "Без названия"), "description": request.json.get("description", ""), "amount": request.json.get("amount", 0), "price": request.json.get("price", 0)}
+            response = {"id": new_food.id, "title": request.get_json().get("title", "Без названия"), "description": request.get_json().get("description", ""), "amount": request.get_json().get("amount", 0), "price": request.get_json().get("price", 0)}
             return jsonify(status=201, data=response), 201
     else:
         return jsonify(status=403, message="Wrong authorization key!", data=None), 403
@@ -117,7 +117,8 @@ def update_food(food_id):
             food.price = request.values.to_dict().get('price', food.price)
             session.add(food)
             session.commit()
-            return jsonify(status=200, data={"id": food.id, "title": food.title, "description": food.description, "amount": food.amount, "price": food.price}), 200
+            food_again = session.query(m.Food).filter(m.Food.id == food_id).first()
+            return jsonify(status=200, data={"id": food_again.id, "title": food_again.title, "description": food_again.description, "amount": food_again.amount, "price": food_again.price}), 200
         else:
             session = Session(m.engine)
             food = session.query(m.Food).filter(m.Food.id == food_id).first()
