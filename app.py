@@ -45,7 +45,7 @@ def get_foods():
         foods = session.query(m.Food).all()
         all_foods = []
         for food in foods:
-            all_foods.append({"id": food.id, "title": food.title, "description": food.description, "amount": food.amount, "price": food.price})
+            all_foods.append({"id": food.id, "title": food.title, "description": food.description, "image": food.image, "price": food.price})
         response = jsonify(status=200, data=all_foods), 200
         return response
     else:
@@ -77,17 +77,17 @@ def add_food():
         print("request.values.to_dict()", request.values.to_dict())
         if request.get_json() == None or request.get_json() is None:
             session = Session(m.engine)
-            new_food = m.Food(title=request.values.to_dict().get("title"), description=request.values.to_dict().get("description"), amount=request.values.to_dict().get("amount"), price=request.values.to_dict().get("price"))
+            new_food = m.Food(title=request.values.to_dict().get("title"), description=request.values.to_dict().get("description"), image=request.values.to_dict().get("image"), price=request.values.to_dict().get("price"))
             session.add(new_food)
             session.commit()
-            response = {"id": new_food.id, "title": request.values.to_dict().get("title"), "description": request.values.to_dict().get("description"), "amount": request.values.to_dict().get("amount"), "price": request.values.to_dict().get("price")}
+            response = {"id": new_food.id, "title": request.values.to_dict().get("title"), "description": request.values.to_dict().get("description"), "image": request.values.to_dict().get("image"), "price": request.values.to_dict().get("price")}
             return jsonify(status=201, data=response), 201
         else:
             session = Session(m.engine)
-            new_food = m.Food(title=request.get_json().get("title", "Без названия"), description=request.get_json().get("description", ""), amount=request.get_json().get("amount", 0), price=request.get_json().get("price", 0))
+            new_food = m.Food(title=request.get_json().get("title", "Без названия"), description=request.get_json().get("description", ""), image=request.get_json().get("image", 0), price=request.get_json().get("price", 0))
             session.add(new_food)
             session.commit()
-            response = {"id": new_food.id, "title": request.get_json().get("title", "Без названия"), "description": request.get_json().get("description", ""), "amount": request.get_json().get("amount", 0), "price": request.get_json().get("price", 0)}
+            response = {"id": new_food.id, "title": request.get_json().get("title", "Без названия"), "description": request.get_json().get("description", ""), "image": request.get_json().get("image", 0), "price": request.get_json().get("price", 0)}
             return jsonify(status=201, data=response), 201
     else:
         return jsonify(status=403, message="Wrong authorization key!", data=None), 403
@@ -103,7 +103,7 @@ def get_food(food_id):
         food = session.query(m.Food).filter(m.Food.id == food_id).first()
         if not food:
             return jsonify(status=404, message="no such food_id", data=None), 404
-        return jsonify(status=200, data={"id": food.id, "title": food.title, "description": food.description, "amount": food.amount, "price": food.price}), 200
+        return jsonify(status=200, data={"id": food.id, "title": food.title, "description": food.description, "image": food.image, "price": food.price}), 200
     else:
         return jsonify(status=403, message="Wrong authorization key!", data=None), 403
 
@@ -122,12 +122,12 @@ def update_food(food_id):
                 return jsonify(status=404, message="no such food_id", data=None), 404
             food.title = request.values.to_dict().get('title', food.title)
             food.description = request.values.to_dict().get('description', food.description)
-            food.amount = request.values.to_dict().get('amount', food.amount)
+            food.image = request.values.to_dict().get('image', food.image)
             food.price = request.values.to_dict().get('price', food.price)
             session.add(food)
             session.commit()
             food_again = session.query(m.Food).filter(m.Food.id == food_id).first()
-            return jsonify(status=200, data={"id": food_again.id, "title": food_again.title, "description": food_again.description, "amount": food_again.amount, "price": food_again.price}), 200
+            return jsonify(status=200, data={"id": food_again.id, "title": food_again.title, "description": food_again.description, "image": food_again.image, "price": food_again.price}), 200
         else:
             session = Session(m.engine)
             food = session.query(m.Food).filter(m.Food.id == food_id).first()
@@ -135,12 +135,12 @@ def update_food(food_id):
                 return jsonify(status=404, message="no such food_id", data=None), 404
             food.title = request.get_json().get('title', food.title)
             food.description = request.get_json().get('description', food.description)
-            food.amount = request.get_json().get('amount', food.amount)
+            food.image = request.get_json().get('image', food.image)
             food.price = request.get_json().get('price', food.price)
             session.add(food)
             session.commit()
             food_again = session.query(m.Food).filter(m.Food.id == food_id).first()
-            return jsonify(status=200, data={"id": food_again.id, "title": food_again.title, "description": food_again.description, "amount": food_again.amount, "price": food_again.price}), 200
+            return jsonify(status=200, data={"id": food_again.id, "title": food_again.title, "description": food_again.description, "image": food_again.image, "price": food_again.price}), 200
 
     else:
         return jsonify(status=403, message="Wrong authorization key!", data=None), 403
