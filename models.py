@@ -24,5 +24,5 @@ class Food(BaseModel):
     )
     title = sa.Column(sa.String(), nullable=False, comment="Название еды")
     description = sa.Column(sa.String(), nullable=True, comment="Описание еды")
-    amount = sa.Column(sa.BigInteger(), default=0, nullable=True, comment="Количество еды")
+    image = sa.Column(sa.String(), default="https://image.freepik.com/free-vector/flat-404-error-template_23-2147745731.jpg", nullable=False, comment="Картинка еды")
     price = sa.Column(sa.BigInteger(), nullable=False, comment="Цена еды")
