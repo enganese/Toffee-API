@@ -1,1 +1,1 @@
-DB_URL = f"postgresql+psycopg2://gcbmnxpbxrnbun:c209a1df2ca1027d7a7773eab6caee4c203e46cda40007801b1e06dc8336ea8f@ec2-52-208-221-89.eu-west-1.compute.amazonaws.com:5432/d53p2nibrvsrbf"
+DB_URL = f"postgresql+psycopg2://zwxayhxapyaiqv:a60fc33fe23868a01cdcaabf3a347459e1f91df6076a9296a2184b8d1d49e1b2@ec2-52-19-164-214.eu-west-1.compute.amazonaws.com:5432/de7rfprs129u5u
