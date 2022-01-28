@@ -7,7 +7,7 @@ import models as m
 app = Flask(__name__)
 
 authorizations = ['12367890-12123423r23rijsvnsfodvndsfjbmdgbknsrgjbimrmowtbmw44389tigmewrkfpqewf', "ulan290106"]
-
+session = Session(m.engine)
 
 @app.errorhandler(404)
 def resource_not_found(e):
@@ -41,7 +41,6 @@ def get_foods():
         return jsonify(status=403, message="Unauthorized request!", data=None), 403
 
     if access in authorizations:
-        session = Session(m.engine)
         foods = session.query(m.Food).all()
         all_foods = []
         for food in foods:
@@ -76,14 +75,12 @@ def add_food():
     if access in authorizations:
         print("request.values.to_dict()", request.values.to_dict())
         if request.get_json() == None or request.get_json() is None:
-            session = Session(m.engine)
             new_food = m.Food(title=request.values.to_dict().get("title"), description=request.values.to_dict().get("description"), image=request.values.to_dict().get("image"), price=request.values.to_dict().get("price"))
             session.add(new_food)
             session.commit()
             response = {"id": new_food.id, "title": request.values.to_dict().get("title"), "description": request.values.to_dict().get("description"), "image": request.values.to_dict().get("image"), "price": request.values.to_dict().get("price")}
             return jsonify(status=201, data=response), 201
         else:
-            session = Session(m.engine)
             new_food = m.Food(title=request.get_json().get("title", "Без названия"), description=request.get_json().get("description", ""), image=request.get_json().get("image", 0), price=request.get_json().get("price", 0))
             session.add(new_food)
             session.commit()
@@ -99,7 +96,6 @@ def get_food(food_id):
     if access == None or access is None:
         return jsonify(status=403, message="Unauthorized request!"), 403
     if access in authorizations:
-        session = Session(m.engine)
         food = session.query(m.Food).filter(m.Food.id == food_id).first()
         if not food:
             return jsonify(status=404, message="no such food_id", data=None), 404
@@ -116,7 +112,6 @@ def update_food(food_id):
     if access in authorizations:
         print("request.get_json()", request.get_json())
         if request.get_json() == None or request.get_json() is None:
-            session = Session(m.engine)
             food = session.query(m.Food).filter(m.Food.id == food_id).first()
             if not food:
                 return jsonify(status=404, message="no such food_id", data=None), 404
@@ -129,7 +124,6 @@ def update_food(food_id):
             food_again = session.query(m.Food).filter(m.Food.id == food_id).first()
             return jsonify(status=200, data={"id": food_again.id, "title": food_again.title, "description": food_again.description, "image": food_again.image, "price": food_again.price}), 200
         else:
-            session = Session(m.engine)
             food = session.query(m.Food).filter(m.Food.id == food_id).first()
             if not food:
                 return jsonify(status=404, message="no such food_id", data=None), 404
@@ -152,7 +146,6 @@ def delete_food(food_id):
     if access == None or access is None:
         return jsonify(status=403, message="Unauthorized request!"), 403
     if access in authorizations:
-        session = Session(m.engine)
         food = session.query(m.Food).filter(m.Food.id == food_id).first()
         if not food:
             return jsonify(status=404, message="no such food_id", data=None), 404
