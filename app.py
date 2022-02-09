@@ -6,7 +6,7 @@ import os
 import requests
 
 
-BOT_TOKEN = ""
+BOT_TOKEN = "5117773200:AAFAmx590zp7oebV0FonobzItJ1tWLsh7l8"
 
 app = Flask(__name__)
 
