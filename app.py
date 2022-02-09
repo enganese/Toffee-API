@@ -15,10 +15,15 @@ session = Session(m.engine)
 
 
 def send_message(text):
-    method = "sendMessage"
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/{method}"
-    data = {"chat_id": 421770530, "text": text}
-    requests.post(url, data=data)
+    try:
+        method = "sendMessage"
+        url = f"https://api.telegram.org/bot{BOT_TOKEN}/{method}"
+        data = {"chat_id": 421770530, "text": text}
+        resp = requests.post(url, data=data)
+        print("reso.status", resp.status, "resp.json()", resp.json())
+        return True
+    except:
+        return False
     
     
 @app.errorhandler(404)
@@ -54,6 +59,7 @@ def send_msg_via_bot():
 
     if access in authorizations:
         message = request.values.to_dict().get("message")
+        print("message:", message)
         send_message(text=message)
         response = jsonify(status=200, data=None), 200
         return response
