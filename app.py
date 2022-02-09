@@ -58,7 +58,7 @@ def send_msg_via_bot():
         return jsonify(status=403, message="Unauthorized request!", data=None), 403
 
     if access in authorizations:
-        message = request.values.to_dict().get("message")
+        message = request.get_json()["message"]
         print("message:", message)
         send_message(text=message)
         response = jsonify(status=200, data=None), 200
