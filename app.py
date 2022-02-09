@@ -47,7 +47,7 @@ def server_side_error(e):
 
 
 @app.route('/api/beta/receive', methods=['POST'])
-def get_foods():
+def send_msg_via_bot():
     access = request.headers.get('Authorization')
     if access == None or access is None:
         return jsonify(status=403, message="Unauthorized request!", data=None), 403
