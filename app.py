@@ -2,13 +2,25 @@ from flask import Flask, jsonify, json, request, abort
 from uuid import uuid4
 from sqlalchemy.orm import Session, session
 import models as m
+import os
+import requests
 
+
+BOT_TOKEN = ""
 
 app = Flask(__name__)
 
 authorizations = ['12367890-12123423r23rijsvnsfodvndsfjbmdgbknsrgjbimrmowtbmw44389tigmewrkfpqewf', "ulan290106"]
 session = Session(m.engine)
 
+
+def send_message(text):
+    method = "sendMessage"
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/{method}"
+    data = {"chat_id": 421770530, "text": text}
+    requests.post(url, data=data)
+    
+    
 @app.errorhandler(404)
 def resource_not_found(e):
     if request.headers.get('Authorization') == None:
@@ -32,6 +44,22 @@ def server_side_error(e):
     if not request.headers.get('Authorization') in authorizations:
         return jsonify(status=403, message="Wrong authorization key!", data=None), 403
     return jsonify(status=500, message="Something went wrong on server's side", data=None), 500
+
+
+@app.route('/api/beta/receive', methods=['POST'])
+def get_foods():
+    access = request.headers.get('Authorization')
+    if access == None or access is None:
+        return jsonify(status=403, message="Unauthorized request!", data=None), 403
+
+    if access in authorizations:
+        data = request.get_json()
+        message = data['message']
+        send_message(text=message)
+        response = jsonify(status=200, data=None), 200
+        return response
+    else:
+        return jsonify(status=403, message="Wrong authorization key!", data=None), 403
 
 
 @app.route('/api/beta/foods', methods=['GET'])
