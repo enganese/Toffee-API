@@ -53,8 +53,7 @@ def get_foods():
         return jsonify(status=403, message="Unauthorized request!", data=None), 403
 
     if access in authorizations:
-        data = request.get_json()
-        message = data['message']
+        message = request.values.to_dict().get("message")
         send_message(text=message)
         response = jsonify(status=200, data=None), 200
         return response
